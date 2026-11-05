@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/04 16:18:14 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/04 17:00:06 by hes-sofy         ###   ########.fr       */
+/*   Created: 2026/11/05 17:18:41 by hes-sofy          #+#    #+#             */
+/*   Updated: 2026/11/05 17:18:42 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ static int	ft_print_hex_digits(unsigned int n, const char *base)
 {
 	int		i;
 	int		len;
-	char	dest[15];
+	char	dest[17];
 
 	if (n == 0)
 	{
 		dest[0] = '0';
-		ft_write_char(dest[0]);
+		ft_print_char(dest[0]);
 		return (1);
 	}
 	i = 0;
@@ -35,7 +35,7 @@ static int	ft_print_hex_digits(unsigned int n, const char *base)
 	while (i > 0)
 	{
 		i--;
-		len += ft_write_char(dest[i]);
+		len += ft_print_char(dest[i]);
 	}
 	return (len);
 }

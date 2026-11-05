@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/04 15:40:40 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/04 16:16:44 by hes-sofy         ###   ########.fr       */
+/*   Created: 2026/11/05 17:18:46 by hes-sofy          #+#    #+#             */
+/*   Updated: 2026/11/05 17:18:47 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	ft_print_digits(long nbr)
 	while (i > 0)
 	{
 		i--;
-		len += ft_write_char(str[i]);
+		len += ft_print_char(str[i]);
 	}
 	return (len);
 }
@@ -43,12 +43,12 @@ int	ft_print_signed(int n)
 	nbr = n;
 	if (nbr == 0)
 	{
-		len += ft_write_char('0');
+		len += ft_print_char('0');
 		return (len);
 	}
 	if (nbr < 0)
 	{
-		len += ft_write_char('-');
+		len += ft_print_char('-');
 		nbr *= -1;
 	}
 	len += ft_print_digits(nbr);
@@ -61,7 +61,7 @@ int	ft_print_unsigned(unsigned int n)
 
 	if (n == 0)
 	{
-		len = ft_write_char('0');
+		len = ft_print_char('0');
 		return (len);
 	}
 	len = ft_print_digits((long)n);

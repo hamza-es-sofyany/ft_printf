@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/04 15:21:26 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/04 15:39:52 by hes-sofy         ###   ########.fr       */
+/*   Created: 2026/11/05 17:18:31 by hes-sofy          #+#    #+#             */
+/*   Updated: 2026/11/05 17:53:32 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	ft_print_char(int c)
 	unsigned char	ch;
 
 	ch = (unsigned char)c;
-	write(1, &ch, 1);
+	if (write(1, &ch, 1) < 0)
+		return (-1);
 	return (1);
 }
 
@@ -25,17 +26,22 @@ int	ft_print_string(const char *s)
 {
 	size_t	i;
 	size_t	len;
+	int		check;
 
 	len = 0;
 	i = 0;
 	if (!s)
 	{
-		len = ft_write_string("(null)");
-		return (len);
+		if (write(1, "(null)", 6) < 0)
+			return (-1);
+		return (6);
 	}
 	while (s[i])
 	{
-		len += ft_print_char((int)s[i]);
+		check = ft_print_char((int)s[i]);
+		if (check == -1)
+			return (-1);
+		len += check;
 		i++;
 	}
 	return (len);
