@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:55 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/05 17:55:52 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/06 10:28:37 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,15 @@ int	ft_printf(const char *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%' && format[i + 1])
-		{
-			check = ft_eval(list, format[i + 1]);
-			if (check == -1)
-				return (-1);
-			len += check;
-			i++;
-		}
+			check = ft_eval(list, format[++i]);
 		else
-		{
 			check = ft_print_char(format[i]);
-			if (check == -1)
-				return (-1);
-			len += check;
+		if (check == -1)
+		{
+			va_end(list);
+			return (-1);
 		}
+		len += check;
 		i++;
 	}
 	va_end(list);
