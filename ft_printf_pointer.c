@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:51 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/07 10:42:32 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/07 12:34:47 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_print_address_hex(unsigned long long n, const char *base)
 		check = ft_print_char(dest[i]);
 		if (check == -1)
 			return (-1);
-		len += ft_print_char(dest[i]);
+		len += check;
 	}
 	return (len);
 }
