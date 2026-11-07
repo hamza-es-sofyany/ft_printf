@@ -4,199 +4,212 @@
 
 ## Description
 
-`ft_printf` is a C library that recreates the mandatory subset of the standard C `printf()` function required by the 42 `ft_printf` project (subject version 12.1).
+The **ft_printf** project consists of recreating the standard C `printf()` function from the C standard library.
 
-The goal is to parse a format string, retrieve the corresponding arguments from a variable-length argument list, and write the formatted output to standard output. The implementation uses `write()` for output and handles the following mandatory conversions:
+The main goal is to understand how variadic functions work in C and how to handle different data types and format specifiers.
+
+The implementation uses the `write()` function to print formatted output directly to the standard output.
+
+### Supported Conversions
 
 | Conversion | Description |
-| --- | --- |
-| `%c` | Writes one character. |
-| `%s` | Writes a string. |
-| `%p` | Writes a pointer address in hexadecimal form. |
-| `%d` | Writes a signed decimal integer. |
-| `%i` | Writes a signed decimal integer. |
-| `%u` | Writes an unsigned decimal integer. |
-| `%x` | Writes an unsigned hexadecimal integer using lowercase letters. |
-| `%X` | Writes an unsigned hexadecimal integer using uppercase letters. |
-| `%%` | Writes a literal percent sign. |
+|:---:|---|
+| `%c` | Prints a single character. |
+| `%s` | Prints a string. |
+| `%p` | Prints a pointer address in hexadecimal format. |
+| `%d` | Prints a signed decimal integer. |
+| `%i` | Prints an integer in base 10. |
+| `%u` | Prints an unsigned decimal integer. |
+| `%x` | Prints a hexadecimal number using lowercase letters. |
+| `%X` | Prints a hexadecimal number using uppercase letters. |
+| `%%` | Prints the percent character `%`. |
 
-The function prototype is:
-
-```c
-int ft_printf(const char *format, ...);
-```
-
-The return value is the number of characters written, following the behaviour expected by the project.
-
-This repository covers the **mandatory part**. Bonus features such as field width, precision, and the `-`, `0`, `.`, `#`, `+`, and space flags are not implemented as part of this version.
-
-## Project structure
-
-```text
-ft_printf/
-├── Makefile
-├── ft_printf.h
-├── ft_printf.c
-├── ft_printf_char.c
-├── ft_printf_hex.c
-├── ft_printf_number.c
-├── ft_printf_pointer.c
-└── tests/
-    └── ft_printf_500_tests.c
-```
-
-The `tests/` directory contains an optional test runner. It is separate from the library and is not needed to build `libftprintf.a`.
+The function returns the total number of characters printed.
 
 ## Instructions
 
-### Requirements
+### Compilation
 
-- A C compiler (`cc`).
-- `make`.
-- `ar` to create the static library.
-
-### Build the library
-
-Run the following command from the repository root:
+To compile the library, run:
 
 ```bash
 make
 ```
 
-This builds the static library:
+This generates the static library:
 
 ```text
 libftprintf.a
 ```
 
-The library is created at the root of the repository, as required by the subject.
+### Makefile Commands
 
-### Use the library in a C program
+| Command | Description |
+|---|---|
+| `make` | Compiles the source files and creates the library. |
+| `make clean` | Removes the object files (`.o`). |
+| `make fclean` | Removes the object files and the library. |
+| `make re` | Cleans and recompiles the library. |
 
-Include the project header:
+### Usage
+
+First, include the project header in your C file:
+
+```c
+#include "ft_printf.h"
+```
+
+You can then use `ft_printf()` in your program.
+
+Example:
 
 ```c
 #include "ft_printf.h"
 
 int main(void)
 {
-    ft_printf("Hello %s! Number: %d\n", "1337", 42);
+    ft_printf("Hello, %s!\n", "World");
+    ft_printf("Number: %d\n", 42);
+    ft_printf("Hexadecimal: %x\n", 255);
     return (0);
 }
 ```
 
-Compile and link your program with the library:
+### Compile Your Program
+
+After writing your C file, compile it with the library:
 
 ```bash
-cc -Wall -Wextra -Werror -I. example.c libftprintf.a -o example
+cc -Wall -Wextra -Werror main.c libftprintf.a
 ```
 
-Run it:
+The command uses:
+
+- `-Wall`: Enables common warnings.
+- `-Wextra`: Enables additional warnings.
+- `-Werror`: Treats warnings as errors.
+- `main.c`: Your C source file.
+- `libftprintf.a`: The ft_printf library.
+
+### Run Your Program
 
 ```bash
-./example
+./a.out
 ```
 
-### Makefile rules
+## Algorithm and Technical Choices
 
-The Makefile provides the required rules:
+### 1. Format String Parsing
 
-| Rule | Action |
-| --- | --- |
-| `make` / `make all` | Builds `libftprintf.a`. |
-| `make clean` | Removes object files. |
-| `make fclean` | Removes object files and `libftprintf.a`. |
-| `make re` | Performs a full rebuild. |
+The main function, `ft_printf()`, reads the format string character by character.
 
-### Run the 500-test suite
+It follows this logic:
 
-The repository's additional test runner can be used to compare `ft_printf()` against the system `printf()` for the included test cases. It checks the emitted bytes and return values and includes boundary, mixed-conversion, long-string, and stress cases.
+1. If the current character is not `%`, it prints that character directly.
+2. If it encounters `%`, it reads the next character as a conversion specifier.
+3. It passes the specifier to `ft_eval()`.
+4. `ft_eval()` identifies the conversion and calls the appropriate helper function.
 
-Place the test source at `tests/ft_printf_500_tests.c`, then build the library with AddressSanitizer and UndefinedBehaviorSanitizer enabled:
+This approach separates format parsing from the actual printing operations and keeps the code organized.
 
-```bash
-make fclean
-make CFLAGS="-Wall -Wextra -Werror -g -fsanitize=address,undefined -fno-omit-frame-pointer"
-```
+### 2. Variadic Arguments
 
-Compile and run the test runner:
+The project uses the `stdarg.h` library to handle a variable number of arguments.
 
-```bash
-cc -Wall -Wextra -Werror -g -fsanitize=address,undefined \
-   -fno-omit-frame-pointer -I. tests/ft_printf_500_tests.c \
-   libftprintf.a -o test500
+The following macros are used:
 
-./test500
-```
+- `va_start()`: Initializes the argument list.
+- `va_arg()`: Retrieves the next argument with its expected data type.
+- `va_end()`: Ends the argument list.
 
-The test suite is an additional validation tool, not an official 42 correction or a mathematical proof that every possible input is error-free. In the recorded test run for this project, all 500 cases passed, with no reported failures, crashes, or timeouts.
+Each conversion retrieves its argument according to the required C type.
 
-## Algorithm and data structures
-
-### Format-string processing
-
-`ft_printf()` processes the format string from left to right:
-
-1. It initializes a `va_list` with `va_start()` to access the arguments supplied after the format string.
-2. It scans the format string one character at a time.
-3. When the current character is not `%`, it writes that character to standard output.
-4. When it encounters `%`, it examines the following character and dispatches to the helper responsible for that conversion.
-5. The helper retrieves the next argument using `va_arg()` with the type required by the conversion, then writes its representation.
-6. After processing the format string, `va_end()` is called and the function returns the number of characters written.
-
-This sequential parsing strategy is sufficient for the mandatory format because it only needs to recognise the nine specified conversion forms. It does not need to build a complete format description or reproduce the buffering system of the original `printf()`.
-
-### Conversion helpers
-
-The implementation separates conversion logic into helper source files:
-
-- `ft_printf_char.c` handles character and string output (`%c` and `%s`).
-- `ft_printf_pointer.c` handles pointer output (`%p`).
-- `ft_printf_number.c` handles signed and unsigned decimal output (`%d`, `%i`, and `%u`).
-- `ft_printf_hex.c` handles hexadecimal output (`%x` and `%X`).
-- `ft_printf.c` coordinates format parsing and conversion dispatch.
-
-Keeping conversion logic in small, focused helpers avoids placing every conversion in one large function. It also makes each conversion easier to test and maintain.
-
-### Variadic arguments
-
-A `va_list` is used to traverse the arguments after `format`. Each conversion must retrieve its argument using the correct type:
-
-| Conversion | Argument type retrieved |
-| --- | --- |
+| Conversion | Argument type |
+|:---:|---|
 | `%c` | `int` |
 | `%s` | `char *` |
 | `%p` | `void *` |
-| `%d`, `%i` | `int` |
-| `%u`, `%x`, `%X` | `unsigned int` |
+| `%d` | `int` |
+| `%i` | `int` |
+| `%u` | `unsigned int` |
+| `%x` | `unsigned int` |
+| `%X` | `unsigned int` |
 | `%%` | No argument |
 
-Using the correct type is essential because variadic functions do not receive type information at runtime. Reading an argument with an incompatible type can cause undefined behaviour.
+### 3. Character and String Handling
 
-### Data structures and design choices
+The `ft_print_char()` function prints one character using `write()`.
 
-The mandatory implementation does not require a complex data structure. It uses:
+The `ft_print_string()` function iterates through a string and prints its characters one by one.
 
-- The format-string pointer (or its current index) to track the character being parsed.
-- `va_list` to track the next variadic argument.
-- Local integer, character, and pointer variables inside the conversion helpers.
+If the string pointer is `NULL`, the implementation prints `(null)`.
 
-This is appropriate because the format is processed sequentially and each conversion can be handled as soon as it is encountered. A token array, linked list, or dynamically allocated format representation would add complexity without being necessary for the required conversions.
+### 4. Number Conversion Algorithm
 
-The library writes output directly with `write()` rather than attempting to reproduce libc's internal output-buffer management, which the subject explicitly excludes.
+The project handles decimal and hexadecimal numbers using division and modulo operations.
+
+The general algorithm is:
+
+1. Extract the last digit using the modulo operator.
+2. Store the digit in a temporary character array.
+3. Remove the last digit using integer division.
+4. Repeat until the number has been fully processed.
+5. Print the stored digits in reverse order.
+
+For decimal numbers, the base is 10.
+
+For hexadecimal numbers, the base is 16. A character string containing hexadecimal digits is used to select the correct character for each digit.
+
+For signed integers, the implementation uses a `long` variable to handle the negative value of `INT_MIN` safely during conversion.
+
+### 5. Pointer Conversion
+
+The `%p` conversion prints a pointer address in hexadecimal format.
+
+For a non-NULL pointer, the implementation prints the `0x` prefix followed by the hexadecimal address.
+
+For a NULL pointer, it prints `(nil)`.
+
+### 6. Data Structures and Memory Management
+
+The implementation does not require complex data structures.
+
+It mainly uses:
+
+- `va_list` to manage the variable arguments.
+- Local character arrays to temporarily store digits.
+- Integer variables to track positions and count printed characters.
+
+No dynamic memory allocation is required for the mandatory conversions implemented in this project.
+
+### 7. Output and Return Value
+
+The project uses the `write()` system call to print characters directly to the standard output.
+
+The helper functions return the number of characters they print, and `ft_printf()` accumulates these values.
+
+At the end, `ft_printf()` returns the total number of characters printed.
+
+The implementation does not reproduce the internal buffer management of the original `printf()`, as required by the project subject.
 
 ## Resources
 
-- The official 42 `ft_printf` subject, version 12.1.
-- [`printf(3)` — Linux manual page](https://man7.org/linux/man-pages/man3/printf.3.html): reference for the standard formatted-output function and conversion behaviour.
-- [`stdarg(3)` — Linux manual page](https://man7.org/linux/man-pages/man3/stdarg.3.html): reference for `va_list`, `va_start`, `va_arg`, and `va_end`.
-- [`write(2)` — Linux manual page](https://man7.org/linux/man-pages/man2/write.2.html): reference for writing bytes to a file descriptor.
-- [C variadic arguments — cppreference](https://en.cppreference.com/w/c/variadic.html): an additional explanation of variadic functions in C.
+### Documentation and References
 
-### AI usage
+- [printf(3) — Linux Manual Page](https://man7.org/linux/man-pages/man3/printf.3.html)
+- [stdarg.h — C Variadic Arguments](https://en.cppreference.com/w/c/variadic.html)
+- [write(2) — Linux Manual Page](https://man7.org/linux/man-pages/man2/write.2.html)
+- [C Language Documentation — cppreference](https://en.cppreference.com/w/c.html)
 
-AI assistance was used as a learning and testing support tool during this project. It helped clarify variadic-function concepts and conversion edge cases, discuss test coverage, generate an additional 500-case test runner, and organise this documentation. The test runner was compiled and executed against this implementation. AI assistance was not treated as proof of correctness; the project author is responsible for understanding the implementation, checking the generated tests, and being able to explain the code and design choices during evaluation.
+### AI Usage
 
-## Author
+AI tools were used as learning and support resources throughout the project.
 
-- **42 login:** `hes-sofy`
+They helped with:
+
+- Understanding variadic functions and the `stdarg.h` macros.
+- Clarifying the behavior of format specifiers and their argument types.
+- Understanding implementation logic and debugging problems.
+- Discussing edge cases and improving the project documentation.
+
+AI was used to support the learning and development process, rather than as a replacement for understanding the code and its implementation.
