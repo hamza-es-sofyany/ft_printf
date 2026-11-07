@@ -6,13 +6,11 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:55 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/07 09:04:21 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/07 10:24:32 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdarg.h>
-#include <stdio.h>
 
 static int	ft_eval(va_list list, char spec)
 {

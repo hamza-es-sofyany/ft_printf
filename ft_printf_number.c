@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:46 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/05 17:18:47 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/07 10:46:20 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,21 @@ static int	ft_print_digits(long nbr)
 	char	str[11];
 	int		i;
 	int		len;
+	int		check;
 
 	len = 0;
 	i = 0;
 	while (nbr > 0)
 	{
-		str[i] = nbr % 10 + 48;
+		str[i++] = nbr % 10 + 48;
 		nbr /= 10;
-		i++;
 	}
-	while (i > 0)
+	while (i-- > 0)
 	{
-		i--;
-		len += ft_print_char(str[i]);
+		check = ft_print_char(str[i]);
+		if (check == -1)
+			return (-1);
+		len += check;
 	}
 	return (len);
 }
