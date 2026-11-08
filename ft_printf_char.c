@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:31 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/07 10:00:52 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/08 13:15:14 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_print_char(int c)
 	unsigned char	ch;
 
 	ch = (unsigned char)c;
-	if (write(1, &ch, 1) < 0)
+	if (write(1, &ch, 1) != 1)
 		return (-1);
 	return (1);
 }
@@ -31,11 +31,7 @@ int	ft_print_string(const char *s)
 	len = 0;
 	i = 0;
 	if (!s)
-	{
-		if (write(1, "(null)", 6) < 0)
-			return (-1);
-		return (6);
-	}
+		s = "(null)";
 	while (s[i])
 	{
 		check = ft_print_char((int)s[i]);

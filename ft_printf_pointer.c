@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:51 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/07 12:34:47 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/08 10:57:51 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,15 @@ static int	ft_print_address_hex(unsigned long long n, const char *base)
 int	ft_print_pointer(void *ptr)
 {
 	int	len;
+	int	check;
 
 	if (!ptr)
-	{
-		len = ft_print_string("(nil)");
-		return (len);
-	}
+		return (ft_print_string("(nil)"));
 	len = ft_print_string("0x");
-	len += ft_print_address_hex((unsigned long long)ptr, "0123456789abcdef");
-	return (len);
+	if (len == -1)
+		return (-1);
+	check = ft_print_address_hex((unsigned long long)ptr, "0123456789abcdef");
+	if (check == -1)
+		return (-1);
+	return (len + check);
 }

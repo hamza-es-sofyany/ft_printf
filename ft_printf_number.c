@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 17:18:46 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/07 10:46:20 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/08 11:11:00 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,24 @@ int	ft_print_signed(int n)
 {
 	long	nbr;
 	int		len;
+	int		check;
 
 	len = 0;
 	nbr = n;
 	if (nbr == 0)
-	{
-		len += ft_print_char('0');
-		return (len);
-	}
+		return (ft_print_char('0'));
 	if (nbr < 0)
 	{
-		len += ft_print_char('-');
+		check = ft_print_char('-');
+		if (check == -1)
+			return (-1);
+		len += check;
 		nbr *= -1;
 	}
-	len += ft_print_digits(nbr);
-	return (len);
+	check = ft_print_digits(nbr);
+	if (check == -1)
+		return (-1);
+	return (len + check);
 }
 
 int	ft_print_unsigned(unsigned int n)
@@ -62,10 +65,7 @@ int	ft_print_unsigned(unsigned int n)
 	int	len;
 
 	if (n == 0)
-	{
-		len = ft_print_char('0');
-		return (len);
-	}
+		return (ft_print_char('0'));
 	len = ft_print_digits((long)n);
 	return (len);
 }
