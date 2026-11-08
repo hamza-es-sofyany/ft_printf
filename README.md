@@ -101,7 +101,9 @@ The command uses:
 
 ### 1. Format String Parsing
 
-The main function, `ft_printf()`, reads the format string character by character.
+The `ft_printf()` function initializes the variadic argument list using `va_start()`, then calls `ft_norm_loop()` to process the format string.
+
+The `ft_norm_loop()` function reads the format string character by character.
 
 It follows this logic:
 
